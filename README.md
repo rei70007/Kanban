@@ -1,56 +1,70 @@
-# sv
+# Kanban Board
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Ein Kanban-Board mit vier Lanes (**Do**, **Doing**, **Done**, **Archiv**), gebaut mit SvelteKit 3, Svelte 5 und Tailwind CSS 4. Die App ist als PWA installierbar und funktioniert komplett offline.
 
-## Creating a project
+**Live:** https://GITHUB-NAME.github.io/REPO-NAME/
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Funktionen
 
-```sh
-# create a new project
-npx sv create my-app
+- Issues anlegen über ein natives HTML-`<dialog>`
+- Issues per Drag & Drop zwischen den Lanes verschieben (native HTML5 Drag-and-Drop-API, keine Library)
+- Jedes Issue hat Titel, Beschreibung, Erstellungsdatum, Fälligkeitsdatum, Story Points und Priorität
+- Speicherung aller Issues (inkl. Lane) im `localStorage`
+- Summe der Story Points pro Lane
+- Visuelle Warnung bei überfälligen Issues (roter Rahmen + Hinweis)
+- Benachrichtigung (Notification API), wenn ein Issue auf Done gezogen wird
+- Export eines Issues als Kalendertermin (`.ics`)
+- Teilen eines Issues über die Web Share API (Fallback: Zwischenablage)
+- Export aller Issues als CSV
+- Datumsanzeige mit [date-fns](https://date-fns.org/) auf Deutsch („in 3 Tagen“, „Fr., 30. Okt. 2026“)
+- PWA mit Service Worker: alle Dateien werden beim ersten Besuch gecacht
+
+## Projektstruktur
+
+```
+src/
+├── app.html                  HTML-Grundgerüst (Manifest, Icons)
+├── app.css                   Tailwind + Farben/Schriften (@theme)
+├── service-worker.js         Offline-Cache für die PWA
+├── lib/
+│   ├── store.svelte.js       Zustand ($state) + localStorage + Lanes
+│   ├── export.js             ICS, CSV, Web Share
+│   ├── notify.js             Notifications
+│   └── components/
+│       ├── Header.svelte     Titel + Buttons
+│       ├── Lane.svelte       Spalte, Drop-Ziel, Story-Point-Summe
+│       ├── IssueCard.svelte  Karte, draggable, Überfällig-Warnung
+│       └── IssueDialog.svelte  Formular im <dialog>
+└── routes/
+    ├── +layout.js            prerender = true, ssr = false
+    ├── +layout.svelte        lädt app.css
+    └── +page.svelte          setzt alles zusammen
+static/
+├── manifest.webmanifest      PWA-Manifest
+└── icon.svg, icon-192.png, icon-512.png
 ```
 
-To recreate this project with the same configuration:
+## Starten
 
-```sh
-# recreate this project
-npx sv@1.2.0 create --template minimal --no-types --add prettier eslint tailwindcss="plugins:typography,forms" --install npm ./
+Voraussetzung: Node.js 22.17 oder neuer.
+
+```bash
+npm install
+npm run dev       # Entwicklungsserver auf http://localhost:5173
+npm run build     # Produktions-Build in den Ordner build/
+npm run preview   # Build lokal testen (Service Worker läuft nur hier, nicht im dev-Modus)
 ```
 
-## Adding features
+## Deployment
 
-Add features to your project with `sv add`:
+Bei jedem Push auf `main` baut die GitHub Action in `.github/workflows/deploy.yml` die App und veröffentlicht sie auf GitHub Pages.
 
-```sh
-npx sv add
-```
+## Technik
 
-For example, to add Tailwind CSS:
-
-```sh
-npx sv add tailwindcss
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+| Bereich | Umsetzung |
+| --- | --- |
+| Framework | SvelteKit 3 mit `adapter-static` (reine statische Seite) |
+| Reaktivität | Svelte 5 Runes: `$state`, `$derived`, `$props` |
+| Styling | Tailwind CSS 4, Schriften Bricolage Grotesque und Atkinson Hyperlegible (lokal gebündelt) |
+| Datum | date-fns mit deutscher Locale |
+| Offline | Service Worker cacht alle Dateien aus `$app/manifest` |
