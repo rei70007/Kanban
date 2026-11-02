@@ -1,12 +1,9 @@
 <script>
-	import './layout.css';
-	import favicon from '#lib/assets/favicon.svg';
+	// Das Layout umschließt jede Seite. Hier laden wir nur das globale CSS.
+	import '../app.css';
 
+	// children = der Inhalt der aktuellen Seite (+page.svelte)
 	let { children } = $props();
 </script>
-
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
 
 {@render children()}

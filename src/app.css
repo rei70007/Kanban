@@ -1,0 +1,43 @@
+/* Tailwind v4 laden */
+@import 'tailwindcss';
+
+/* Schriften lokal (aus node_modules) -> funktionieren auch offline */
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource/atkinson-hyperlegible/400.css';
+@import '@fontsource/atkinson-hyperlegible/700.css';
+
+/* Eigene Design-Tokens: daraus erzeugt Tailwind Klassen wie bg-stone, text-ink, font-display ...
+   "static" = alle Variablen immer ausgeben, weil wir var(--color-lane-...) auch direkt im style-Attribut nutzen */
+@theme static {
+	--font-display: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+	--font-sans: 'Atkinson Hyperlegible', system-ui, sans-serif;
+
+	--color-stone: #dce0d9; /* Hintergrund */
+	--color-sheet: #f7f8f5; /* Karten */
+	--color-ink: #1e2329; /* Text */
+	--color-muted: #5d665f; /* Nebentext */
+	--color-line: #b9c0b6; /* Rahmen */
+
+	/* Eine Farbe pro Lane */
+	--color-lane-todo: #c08a1e;
+	--color-lane-doing: #2f5da8;
+	--color-lane-done: #4f7a4a;
+	--color-lane-archive: #7d847e;
+
+	--color-alert: #b23a2e; /* Überfällig */
+}
+
+body {
+	@apply bg-stone font-sans text-ink antialiased;
+}
+
+/* Hintergrund hinter dem geöffneten <dialog> */
+dialog::backdrop {
+	background: rgb(30 35 41 / 0.45);
+}
+
+/* Sichtbarer Tastatur-Fokus */
+:focus-visible {
+	outline: 2px solid var(--color-lane-doing);
+	outline-offset: 2px;
+}

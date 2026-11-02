@@ -1,9 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="text-scale" content="scale" />
+		<meta name="theme-color" content="#dce0d9" />
+		<meta name="description" content="Kanban-Board mit vier Lanes, offline nutzbar." />
+		<!-- PWA: Manifest + Icons (Platzhalter sveltekit.assets = Pfad zum static-Ordner) -->
+		<link rel="manifest" href="%sveltekit.assets%/manifest.webmanifest" />
+		<link rel="icon" href="%sveltekit.assets%/icon.svg" type="image/svg+xml" />
+		<link rel="apple-touch-icon" href="%sveltekit.assets%/icon-192.png" />
+		<title>Kanban</title>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
